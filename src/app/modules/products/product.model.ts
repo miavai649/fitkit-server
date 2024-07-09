@@ -22,9 +22,17 @@ const productSchema = new Schema<TProduct>({
     type: String,
     required: true
   },
+  quantity: {
+    type: Number,
+    required: true
+  },
   stock: {
     type: String,
     required: true
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false
   }
 })
 
