@@ -1,10 +1,21 @@
-import express, { Request, Response } from "express";
-const app = express();
+import express, { Application, Request, Response } from 'express'
+import cors from 'cors'
+import { ProductRoutes } from './app/modules/products/product.route'
 
-app.get("/", (req: Request, res: Response) => {
-  const a = "bolo";
+const app: Application = express()
 
-  res.send(a);
-});
+// parsers
+app.use(express.json())
+app.use(cors())
 
-export default app;
+// root application route
+app.use('/api/product', ProductRoutes)
+
+// test routes
+app.get('/', (req: Request, res: Response) => {
+  const a = 'hello world'
+
+  res.send(a)
+})
+
+export default app
