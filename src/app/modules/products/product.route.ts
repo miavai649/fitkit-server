@@ -12,5 +12,10 @@ router.post(
   ProductControllers.createProduct,
 );
 router.get("/", parseQueryParams, ProductControllers.getAllProduct);
+router.patch(
+  "/:id",
+  validateRequest(ProductValidations.updateProductValidation),
+  ProductControllers.updateProduct,
+);
 
 export const ProductRoutes = router;
