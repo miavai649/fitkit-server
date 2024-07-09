@@ -9,7 +9,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-// root application route
+// product all routes
 app.use("/api/product", ProductRoutes);
 
 // test routes
