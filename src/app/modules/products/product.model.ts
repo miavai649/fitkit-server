@@ -29,7 +29,8 @@ const productSchema = new Schema<TProduct>(
     },
     stock: {
       type: String,
-      required: true,
+      enum: ["in-stock", "out-stock"],
+      default: "in-stock",
     },
     isDeleted: {
       type: Boolean,

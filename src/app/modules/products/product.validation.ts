@@ -26,9 +26,7 @@ const createProductValidation = z.object({
         required_error: "Product quantity must be provided",
       })
       .nonnegative("Quantity must be a non negative number"),
-    stock: z.string({
-      required_error: "Product stock status must be provided",
-    }),
+    stock: z.enum(["in-stock", "out-stock"]).default("in-stock"),
     isDeleted: z.boolean().optional(),
   }),
 });
@@ -68,11 +66,7 @@ const updateProductValidation = z.object({
       })
       .nonnegative("Quantity must be a non negative number")
       .optional(),
-    stock: z
-      .string({
-        required_error: "Product stock status must be provided",
-      })
-      .optional(),
+    stock: z.enum(["in-stock", "out-stock"]).optional(),
     isDeleted: z.boolean().optional(),
   }),
 });

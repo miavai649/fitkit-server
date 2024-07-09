@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { ProductRoutes } from "./app/modules/products/product.route";
 import globalErrorHandler from "./app/middleware/globalErrorHandler";
+import { OrderRoutes } from "./app/modules/order/order.route";
 
 const app: Application = express();
 
@@ -11,6 +12,9 @@ app.use(cors());
 
 // product all routes
 app.use("/api/product", ProductRoutes);
+
+// order all routes
+app.use("/api/order", OrderRoutes);
 
 // test routes
 app.get("/", (req: Request, res: Response) => {

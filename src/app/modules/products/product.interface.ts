@@ -5,6 +5,6 @@ export type TProduct = {
   images: string[];
   category: string;
   quantity: number;
-  stock: string;
+  stock: "in-stock" | "out-stock";
   isDeleted: boolean;
 };
