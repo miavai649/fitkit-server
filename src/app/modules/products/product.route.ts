@@ -1,21 +1,22 @@
-import express from "express";
-import validateRequest from "../../middleware/validateRequest";
-import { ProductValidations } from "./product.validation";
-import { ProductControllers } from "./product.controller";
-import parseQueryParams from "../../middleware/parshingQueryParams";
+import express from 'express'
+import validateRequest from '../../middleware/validateRequest'
+import { ProductValidations } from './product.validation'
+import { ProductControllers } from './product.controller'
+import parseQueryParams from '../../middleware/parshingQueryParams'
 
-const router = express.Router();
+const router = express.Router()
 
 router.post(
-  "/",
+  '/',
   validateRequest(ProductValidations.createProductValidation),
-  ProductControllers.createProduct,
-);
-router.get("/", parseQueryParams, ProductControllers.getAllProduct);
+  ProductControllers.createProduct
+)
+router.get('/:id', ProductControllers.getSingleProduct)
+router.get('/', parseQueryParams, ProductControllers.getAllProduct)
 router.patch(
-  "/:id",
+  '/:id',
   validateRequest(ProductValidations.updateProductValidation),
-  ProductControllers.updateProduct,
-);
+  ProductControllers.updateProduct
+)
 
-export const ProductRoutes = router;
+export const ProductRoutes = router
