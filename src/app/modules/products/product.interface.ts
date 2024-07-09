@@ -6,5 +6,4 @@ export type TProduct = {
   category: string;
   quantity: number;
   stock: "in-stock" | "out-stock";
-  isDeleted: boolean;
 };

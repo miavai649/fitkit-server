@@ -27,7 +27,6 @@ const createProductValidation = z.object({
       })
       .nonnegative("Quantity must be a non negative number"),
     stock: z.enum(["in-stock", "out-stock"]).default("in-stock"),
-    isDeleted: z.boolean().optional(),
   }),
 });
 
@@ -67,7 +66,6 @@ const updateProductValidation = z.object({
       .nonnegative("Quantity must be a non negative number")
       .optional(),
     stock: z.enum(["in-stock", "out-stock"]).optional(),
-    isDeleted: z.boolean().optional(),
   }),
 });
 

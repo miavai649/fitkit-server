@@ -3,6 +3,18 @@ import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 
 const createProductIntoDb = async (payload: TProduct) => {
+  const product = await Product.findOne({ name: payload?.name });
+
+  if (product) {
+    const updatedQuantity = payload?.quantity + product.quantity;
+    const result = await Product.findOneAndUpdate(
+      { name: payload?.name },
+      { quantity: updatedQuantity },
+      { new: true },
+    );
+    return result;
+  }
+
   const result = await Product.create(payload);
   return result;
 };
