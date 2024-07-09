@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request, Response } from 'express'
-import { AnyZodObject } from 'zod'
+import { AnyZodObject } from "zod";
+import catchAsync from "../utils/catchAsync";
 
 const validateRequest = (Schema: AnyZodObject) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      Schema.parseAsync({
-        body: req.body
-      })
-    } catch (error: any) {
-      res.status(400).json({
-        error: error.message
-      })
-      return next()
-    }
-    next()
-  }
-}
+  return catchAsync(async (req, res, next) => {
+    await Schema.parseAsync({
+      body: req.body,
+    });
 
-export default validateRequest
+    next();
+  });
+};
+
+export default validateRequest;

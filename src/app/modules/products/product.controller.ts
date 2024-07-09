@@ -1,24 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from "express";
+
 import { ProductServices } from "./product.service";
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
 
-const createProduct = async (req: Request, res: Response) => {
-  try {
-    const productData = req.body;
+const createProduct = catchAsync(async (req, res) => {
+  const productData = req.body;
 
-    const result = await ProductServices.createProductIntoDb(productData);
-    res.status(200).json({
-      success: true,
-      message: "Product created successfully",
-      data: result,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || "Internal Server Error",
-    });
-  }
-};
+  const result = await ProductServices.createProductIntoDb(productData);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Product created successfully",
+    data: result,
+  });
+});
 
 export const ProductControllers = {
   createProduct,
