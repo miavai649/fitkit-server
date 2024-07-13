@@ -55,9 +55,19 @@ const getAllProductFromDb = async (query: IParsedQuery) => {
   // sorting by price
   const sortOrder = sort === 'asc' ? 1 : -1
 
-  const result = await Product.find(products).sort({ price: sortOrder })
+  console.log({ sort })
 
-  return result
+  if (!sort) {
+    const result = await Product.find(products).sort({
+      createdAt: -1
+    })
+
+    return result
+  } else {
+    const result = await Product.find(products).sort({ price: sortOrder })
+
+    return result
+  }
 }
 
 const updateProductIntoDb = async (id: string, payload: Partial<TProduct>) => {

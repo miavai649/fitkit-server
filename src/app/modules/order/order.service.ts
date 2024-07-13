@@ -1,50 +1,58 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mongoose from "mongoose";
-import { Product } from "../products/product.model";
-import { TOrder } from "./order.interface";
-import { Order } from "./order.model";
+import mongoose from 'mongoose'
+import { Product } from '../products/product.model'
+import { TOrder } from './order.interface'
+import { Order } from './order.model'
 
 const createOrderIntoDb = async (payload: TOrder) => {
-  const product = await Product.findById(payload.productId);
+  const product = await Product.findById(payload.productId)
 
   if (!product) {
-    throw new Error("Product not found");
+    throw new Error('Product not found')
   }
 
-  if (product?.stock === "out-stock") {
-    throw new Error("Product is out of stock now");
+  if (product?.stock === 'out-stock') {
+    throw new Error('Product is out of stock now')
   }
 
-  const session = await mongoose.startSession();
+  const session = await mongoose.startSession()
 
   try {
-    session.startTransaction();
+    session.startTransaction()
 
     if (payload?.quantity > product?.quantity) {
-      throw new Error("Order quantity exceeds available product quantity");
+      throw new Error('Order quantity exceeds available product quantity')
     }
 
-    const order = await Order.create([payload], { session });
+    const order = await Order.create([payload], { session })
 
-    const updatedProductQuantity = product?.quantity - payload?.quantity;
+    const updatedProductQuantity = product?.quantity - payload?.quantity
+
+    if (!updatedProductQuantity) {
+      await Product.findByIdAndUpdate(
+        product?._id,
+        { quantity: updatedProductQuantity, stock: 'out-stock' },
+        { new: true, session }
+      )
+    }
 
     await Product.findByIdAndUpdate(
       product?._id,
       { quantity: updatedProductQuantity },
-      { new: true },
-    );
+      { new: true, session }
+    )
 
-    await session.commitTransaction();
-    await session.endSession();
+    await session.commitTransaction()
+    await session.endSession()
 
-    return order[0];
+    return order[0]
   } catch (error: any) {
-    await session.abortTransaction();
-    await session.endSession();
-    throw new Error(error);
+    await session.abortTransaction()
+    await session.endSession()
+    throw new Error(error)
   }
-};
+}
 
 export const OrderServices = {
-  createOrderIntoDb,
-};
+  createOrderIntoDb
+}
