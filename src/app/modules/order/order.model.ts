@@ -1,84 +1,84 @@
-import { model, Schema, Document } from 'mongoose'
-import { TPayment, TProductCart } from './order.interface'
+import { model, Schema, Document } from "mongoose";
+import { TPayment, TProductCart } from "./order.interface";
 
 // Create the ProductCart schema
 const productCartSchema = new Schema<TProductCart>(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     price: {
       type: Number,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     images: {
       type: [String],
-      required: true
+      required: true,
     },
     category: {
       type: String,
-      enum: ['weights', 'cardio', 'gear', 'apparel'],
-      required: true
+      enum: ["weights", "cardio", "gear", "apparel"],
+      required: true,
     },
     quantity: {
       type: Number,
-      required: true
+      required: true,
     },
     stock: {
       type: String,
-      enum: ['in-stock', 'out-stock'],
-      required: true
+      enum: ["in-stock", "out-stock"],
+      required: true,
     },
     orderQuantity: {
       type: Number,
-      required: true
+      required: true,
     },
     orderPrice: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
 // Create the Payment schema
 const paymentSchema = new Schema<TPayment>(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      required: true
+      required: true,
     },
     phone: {
       type: String,
-      required: true
+      required: true,
     },
     address: {
       type: String,
-      required: true
+      required: true,
     },
     cart: {
       type: [productCartSchema],
-      required: true
+      required: true,
     },
     totalPrice: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
-export const Payment = model<TPayment>('Payment', paymentSchema)
+export const Payment = model<TPayment>("Payment", paymentSchema);

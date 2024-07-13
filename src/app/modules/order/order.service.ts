@@ -1,32 +1,31 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mongoose from 'mongoose'
-import { Product } from '../products/product.model'
-import { TPayment } from './order.interface'
+import mongoose from "mongoose";
+import { Product } from "../products/product.model";
+import { TPayment } from "./order.interface";
 
 const createPaymentIntoDB = async (payload: TPayment) => {
-  console.log('🚀 ~ createPaymentIntoDB ~ payload:', payload)
-  const updatedProducts = []
+  const updatedProducts = [];
 
   for (const item of payload.cart) {
-    const productId = item._id
-    const orderQuantity = item.orderQuantity
+    const productId = item._id;
+    const orderQuantity = item.orderQuantity;
 
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
       { $inc: { quantity: -orderQuantity } },
-      { new: true }
-    )
+      { new: true },
+    );
 
     if (!updatedProduct) {
-      throw new Error(`Product not found with ID: ${productId}`)
+      throw new Error(`Product not found with ID: ${productId}`);
     }
 
-    updatedProducts.push(updatedProduct)
+    updatedProducts.push(updatedProduct);
   }
 
-  return updatedProducts
-}
+  return updatedProducts;
+};
 
 export const OrderServices = {
-  createPaymentIntoDB
-}
+  createPaymentIntoDB,
+};

@@ -1,42 +1,42 @@
-import { model, Schema } from 'mongoose'
-import { TProduct } from './product.interface'
+import { model, Schema } from "mongoose";
+import { TProduct } from "./product.interface";
 
 const productSchema = new Schema<TProduct>(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     price: {
       type: Number,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     images: {
       type: [String],
-      required: true
+      required: true,
     },
     category: {
       type: String,
-      enum: ['weights', 'cardio', 'gear', 'apparel'],
-      required: true
+      enum: ["weights", "cardio", "gear", "apparel"],
+      required: true,
     },
     quantity: {
       type: Number,
-      required: true
+      required: true,
     },
     stock: {
       type: String,
-      enum: ['in-stock', 'out-stock'],
-      default: 'in-stock'
-    }
+      enum: ["in-stock", "out-stock"],
+      default: "in-stock",
+    },
   },
   {
-    timestamps: true
-  }
-)
+    timestamps: true,
+  },
+);
 
-export const Product = model<TProduct>('Product', productSchema)
+export const Product = model<TProduct>("Product", productSchema);
