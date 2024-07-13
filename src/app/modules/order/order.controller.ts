@@ -1,20 +1,21 @@
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
-import { OrderServices } from "./order.service";
+import catchAsync from '../../utils/catchAsync'
+import sendResponse from '../../utils/sendResponse'
+import { OrderServices } from './order.service'
 
 const createOrder = catchAsync(async (req, res) => {
-  const orderData = req.body;
+  const orderData = req.body
+  console.log('🚀 ~ createOrder ~ orderData:', orderData)
 
-  const result = await OrderServices.createOrderIntoDb(orderData);
+  const result = await OrderServices.createPaymentIntoDB(orderData)
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: "Order created successfully",
-    data: result,
-  });
-});
+    message: 'Order created successfully',
+    data: result
+  })
+})
 
 export const OrderControllers = {
-  createOrder,
-};
+  createOrder
+}

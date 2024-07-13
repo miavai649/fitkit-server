@@ -1,58 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from 'mongoose'
 import { Product } from '../products/product.model'
-import { TOrder } from './order.interface'
-import { Order } from './order.model'
+import { TPayment } from './order.interface'
 
-const createOrderIntoDb = async (payload: TOrder) => {
-  const product = await Product.findById(payload.productId)
+const createPaymentIntoDB = async (payload: TPayment) => {
+  console.log('🚀 ~ createPaymentIntoDB ~ payload:', payload)
+  const updatedProducts = []
 
-  if (!product) {
-    throw new Error('Product not found')
-  }
+  for (const item of payload.cart) {
+    const productId = item._id
+    const orderQuantity = item.orderQuantity
 
-  if (product?.stock === 'out-stock') {
-    throw new Error('Product is out of stock now')
-  }
-
-  const session = await mongoose.startSession()
-
-  try {
-    session.startTransaction()
-
-    if (payload?.quantity > product?.quantity) {
-      throw new Error('Order quantity exceeds available product quantity')
-    }
-
-    const order = await Order.create([payload], { session })
-
-    const updatedProductQuantity = product?.quantity - payload?.quantity
-
-    if (!updatedProductQuantity) {
-      await Product.findByIdAndUpdate(
-        product?._id,
-        { quantity: updatedProductQuantity, stock: 'out-stock' },
-        { new: true, session }
-      )
-    }
-
-    await Product.findByIdAndUpdate(
-      product?._id,
-      { quantity: updatedProductQuantity },
-      { new: true, session }
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { quantity: -orderQuantity } },
+      { new: true }
     )
 
-    await session.commitTransaction()
-    await session.endSession()
+    if (!updatedProduct) {
+      throw new Error(`Product not found with ID: ${productId}`)
+    }
 
-    return order[0]
-  } catch (error: any) {
-    await session.abortTransaction()
-    await session.endSession()
-    throw new Error(error)
+    updatedProducts.push(updatedProduct)
   }
+
+  return updatedProducts
 }
 
 export const OrderServices = {
-  createOrderIntoDb
+  createPaymentIntoDB
 }

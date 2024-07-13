@@ -55,8 +55,6 @@ const getAllProductFromDb = async (query: IParsedQuery) => {
   // sorting by price
   const sortOrder = sort === 'asc' ? 1 : -1
 
-  console.log({ sort })
-
   if (!sort) {
     const result = await Product.find(products).sort({
       createdAt: -1
