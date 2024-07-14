@@ -48,24 +48,18 @@ const getAllProductFromDb = async (query: IParsedQuery) => {
   }
 
   // ultimate query
-  const products = {
+  const productsQuery = {
     $and: [searchQuery, categoryFilter],
   };
 
   // sorting by price
-  const sortOrder = sort === "asc" ? 1 : -1;
+  const sortQuery: { [key: string]: 1 | -1 } = sort
+    ? { price: sort === "asc" ? 1 : -1 }
+    : { createdAt: -1 };
 
-  if (!sort) {
-    const result = await Product.find(products).sort({
-      createdAt: -1,
-    });
+  const result = await Product.find(productsQuery).sort(sortQuery);
 
-    return result;
-  } else {
-    const result = await Product.find(products).sort({ price: sortOrder });
-
-    return result;
-  }
+  return result;
 };
 
 const updateProductIntoDb = async (id: string, payload: Partial<TProduct>) => {

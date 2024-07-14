@@ -1,7 +1,7 @@
 export interface IParsedQuery {
   searchTerm?: string;
   categories?: string[];
-  sort: "asc" | "desc";
+  sort?: "asc" | "desc";
 }
 
 declare global {
