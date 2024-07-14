@@ -57,11 +57,11 @@ const getAllProductFromDb = async (query: TParsedQuery) => {
     : { createdAt: -1 };
 
   // pagination
-  const skip = (page - 1) * 5;
+  const skip = (page - 1) * 10;
   const result = await Product.find(productsQuery)
     .sort(sortQuery)
     .skip(skip)
-    .limit(5);
+    .limit(10);
 
   const total = await Product.countDocuments(productsQuery);
 
