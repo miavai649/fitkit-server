@@ -1,5 +1,4 @@
-import { IParsedQuery } from "../../interface";
-import { TProduct } from "./product.interface";
+import { TParsedQuery, TProduct } from "./product.interface";
 import { Product } from "./product.model";
 
 const createProductIntoDb = async (payload: TProduct) => {
@@ -30,8 +29,8 @@ const getCategoriesProducts = async (category: string) => {
   return result;
 };
 
-const getAllProductFromDb = async (query: IParsedQuery) => {
-  const { searchTerm, categories, sort } = query;
+const getAllProductFromDb = async (query: TParsedQuery) => {
+  const { searchTerm, categories, sort, page } = query;
 
   // search query
   const searchQuery = {
@@ -57,9 +56,20 @@ const getAllProductFromDb = async (query: IParsedQuery) => {
     ? { price: sort === "asc" ? 1 : -1 }
     : { createdAt: -1 };
 
-  const result = await Product.find(productsQuery).sort(sortQuery);
+  // pagination
+  const skip = (page - 1) * 5;
+  const result = await Product.find(productsQuery)
+    .sort(sortQuery)
+    .skip(skip)
+    .limit(5);
 
-  return result;
+  const total = await Product.countDocuments(productsQuery);
+
+  return {
+    total,
+    page,
+    products: result,
+  };
 };
 
 const updateProductIntoDb = async (id: string, payload: Partial<TProduct>) => {

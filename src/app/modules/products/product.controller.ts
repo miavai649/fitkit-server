@@ -3,7 +3,7 @@
 import { ProductServices } from "./product.service";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import { IParsedQuery } from "../../interface";
+import { TParsedQuery } from "./product.interface";
 
 const createProduct = catchAsync(async (req, res) => {
   const productData = req.body;
@@ -43,7 +43,12 @@ const getCategoryProducts = catchAsync(async (req, res) => {
 });
 
 const getAllProduct = catchAsync(async (req, res) => {
-  const { searchTerm = "", category: categories, sort = "" } = req.query;
+  const {
+    searchTerm = "",
+    category: categories,
+    sort = "",
+    page = "1",
+  } = req.query;
 
   // Ensure categories is an array of strings, handling single and multiple category values
   const parsedCategories = categories
@@ -52,10 +57,11 @@ const getAllProduct = catchAsync(async (req, res) => {
       : [categories as string]
     : [];
 
-  const parsedQuery: IParsedQuery = {
+  const parsedQuery: TParsedQuery = {
     searchTerm: searchTerm as string,
     categories: parsedCategories,
     sort: sort as "asc" | "desc",
+    page: parseInt(page as string, 10),
   };
 
   const result = await ProductServices.getAllProductFromDb(parsedQuery);
